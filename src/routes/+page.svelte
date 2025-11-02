@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { startFPS } from '$lib/scripts/fps';
+	import { initSnow } from '$lib/scripts/snow';
 
 	onMount(() => {
 		startFPS();
+		initSnow();
 	});
 </script>
 
