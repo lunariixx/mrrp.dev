@@ -1,1 +1,30 @@
 @import 'tailwindcss';
+
+body {
+    background-color: #111113;
+    color: #EDEEF0;
+}
+
+#fps {
+	position: fixed;
+	left: 0;
+	top: 0;
+	color: lime;
+	outline: black;
+	text-shadow: none;
+}
+
+#overlay {
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: 9999;
+	background-image: url('/images/overlay.png');
+	background-repeat: repeat;
+}
+
+#wrapper {
+  width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
