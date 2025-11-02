@@ -1,0 +1,1 @@
+I decided to wipe my old website, as I was not happy with it. I will be working on this over a good while, if you wish to check back later ;D
