@@ -15,7 +15,7 @@ export interface NowPlaying {
 export async function fetchNowPlaying(): Promise<NowPlaying> {
 	try {
 		// Request data from your backend API (SvelteKit endpoint or remote)
-		const res = await fetch('/api/services/lastfm/now');
+		const res = await fetch('/api/services/lastfm/now?user=lunarii_xx');
 		const data = await res.json();
 
 		// Normalize the response — ensures all fields exist even if the API omits some
