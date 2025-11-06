@@ -61,6 +61,12 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Luni's Den</title>
+	<meta name="description" content="My website and blog." />
+	<meta name="keywords" content="luni, lunarii_xx, JS, JavaScript, discord, nes, emulators, 90s, pixels">
+</svelte:head>
+
 <div id="wrapper">
 	<div id="overlay"></div>
 	<div id="cursors"></div>
