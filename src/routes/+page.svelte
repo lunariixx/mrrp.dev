@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
+	import { initSnow } from '$lib/scripts/snow';
 	import { createTicker } from '$lib/scripts/scroller';
 	import { fetchNowPlaying } from '$lib/scripts/music';
 	import type { NowPlaying } from '$lib/scripts/music';
@@ -19,6 +20,7 @@
 	let artistTicker: ReturnType<typeof createTicker> | undefined;
 
 	onMount(() => {
+		initSnow()
 		updateSong();
 		const interval = setInterval(updateSong, 5000);
 		return () => {
