@@ -1,20 +1,22 @@
+// Initializes a simple "snow" visual effect that only appears during winter months.
+// November (10) to February (1) are treated as winter.
 export function initSnow() {
-    // Check if the current month is winter (Nov, Dec, Jan, Feb)
+	// Check current month (0 = January, 11 = December)
 	const isWinter = [10, 11, 0, 1].includes(new Date().getMonth());
-	if (!isWinter) return;
+	if (!isWinter) return; // Exit if not winter
 
-    // Create snow container
+	// Create a container div for the snow effect
 	const snowDiv = document.createElement('div');
 	snowDiv.id = 'snow';
 
-    // Append to document body
+	// Append it to the page body so it can render above content
 	document.body.appendChild(snowDiv);
 
-    // Function to stop snow
+	// Helper to stop the snow effect later if needed
 	function stopSnow() {
 		snowDiv.remove();
 	}
 
-    // Return stop function
+	// Return a handle so the caller can stop the effect programmatically
 	return { stopSnow };
 }
