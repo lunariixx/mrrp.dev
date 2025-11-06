@@ -3,7 +3,7 @@
 body {
 	background-color: #111113;
 	color: #edeef0;
-    image-rendering: pixelated;
+	image-rendering: pixelated;
 	font-family: 'RussianGothic', 'MS UI Gothic', 'NEC_APC3', Tahoma;
 	background-color: black;
 	text-shadow: var(--body-text-shadow);
@@ -104,10 +104,6 @@ body {
 	vertical-align: baseline;
 }
 
-#musicbox {
-	height: 60px;
-}
-
 #albumcover {
 	border: 1px solid #383838;
 	float: left;
@@ -124,6 +120,31 @@ body {
 	text-overflow: ellipsis;
 	display: grid;
 	overflow: hidden;
+}
+
+.blob {
+	background: #5dff8a;
+	border-radius: 50%;
+	height: 10px;
+	width: 10px;
+	box-shadow: 0 0 0 0 #5dff8a;
+	transform: scale(1);
+	animation: pulse 2s infinite;
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: -4px;
+}
+
+.inblob {
+	background: rgb(93, 93, 93);
+	border-radius: 50%;
+	height: 10px;
+	width: 10px;
+	box-shadow: 0 0 0 0 rgb(93, 93, 93);
+	transform: scale(1);
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: -4px;
 }
 
 /* ANIMATIONS */
@@ -157,4 +178,52 @@ body {
 	}
 }
 
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(93, 255, 138, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(93, 255, 138, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(93, 255, 138, 0);
+	}
+}
+
 /* FONTS */
+@font-face {
+	font-family: 'Pixel NES';
+	src:
+		url('/fonts/Pixel_NES.eot?') format('eot'),
+		url('/fonts/Pixel_NES.woff') format('woff'),
+		url('/fonts/Pixel_NES.ttf') format('truetype'),
+		url('/fonts/Pixel_NES.svg#PixelNES') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'NEC_APC3';
+	src: url('/fonts/pixelfonts/Web437_NEC_APC3_8x16.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'NEC_APC3';
+	src: url('/fonts/pixelfonts/Web437_Nix8810_M16.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Perfect DOS VGA 437 Win';
+	src: url('/fonts/Perfect DOS VGA 437 Win.ttf?') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
