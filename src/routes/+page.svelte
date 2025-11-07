@@ -8,15 +8,15 @@
 
 	let song: NowPlaying = {
 		nowPlaying: false,
-		artist: '',
-		title: '',
+		artist: 'Loading Artist...',
+		title: 'Loading Song...',
 		url: '',
-		image: '',
-		playedAt: null
+		image: 'images/lastfm.jpg',
+		playedAt: "0"
 	};
 
-	let displayedTitle = '';
-	let displayedArtist = '';
+	let displayedTitle = 'SONG_TITLE';
+	let displayedArtist = 'ARTIST_NAME';
 	let titleTicker: ReturnType<typeof createTicker> | undefined;
 	let artistTicker: ReturnType<typeof createTicker> | undefined;
 
