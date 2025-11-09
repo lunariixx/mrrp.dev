@@ -1,66 +1,66 @@
-// Defines the public interface for a text ticker.
-// A ticker can be started and stopped, similar to play/pause for a song.
-export interface Ticker {
-	start: () => void; // Starts scrolling the text
-	stop: () => void;  // Stops scrolling the text
-}
+export class Scroller {
+    public target_element;
+    public text;
+    public max_length;
+    public trail_chars;
+    public scroll_interval;
+    public running;
+    public i;
+    public steps;
+    /**
+     * @param target_element Which HTMLElement to write the scroller text to.
+     * @param start_text Initial scroller text.
+     * @param max_length How many characters to display at a time.
+     * @param trail_chars Specify if you want a more fluid scrolling effect.
+     * @param update_interval The delay between steps of the scroller (millis).
+     */
+    constructor(target_element: HTMLElement, start_text: string, max_length: number, trail_chars: number, update_interval: number) {
+        this.target_element = target_element
+            , this.text = start_text
+            , this.max_length = max_length
+            , this.trail_chars = trail_chars
+            , this.scroll_interval = update_interval
+            , this.running = false
+            , this.steps = (): number => Math.ceil(this.text.length / this.max_length)
+            , this.i = 0;
+    }
 
-// Interval speed in milliseconds for each "tick" of the ticker
-const tickSpeed = 300;
+    setElement(new_element: HTMLElement) {
+        this.target_element = new_element;
+        this.i = 0;
+    }
 
-// Time to pause at the ends before reversing direction
-const holdTime = 1000;
+    setText(new_text: string) {
+        this.text = new_text;
+        this.i = 0;
+    }
 
-// Factory function to create a ticker for a given text
-// `fullText` is the text to scroll
-// `setter` updates the visible portion of the text
-// `windowLength` defines how many characters are visible at once (default: 16)
-export function createTicker(
-	fullText: string,
-	setter: (val: string) => void,
-	windowLength: number = 16
-): Ticker {
-	let i = 0; // Current index in the text
-	let direction = 1; // Scrolling direction: 1 = forward, -1 = backward
-	const maxStart = fullText.length - windowLength; // Last start index to avoid overshooting
-	let holding = false; // Whether we are currently in a pause at the end
-	let interval: ReturnType<typeof setInterval> | undefined; // Handle for the interval timer
+    setMaxLength(new_length: number) {
+        this.max_length = new_length;
+        this.i = 0;
+    }
 
-	// Single tick of the ticker: updates the visible text and handles direction reversal
-	function tick() {
-		if (!holding) {
-			// Update the visible portion of the text
-			setter(fullText.substring(i, i + windowLength));
+    setTrailChars(new_chars: number) {
+        this.trail_chars = new_chars;
+        this.i = 0;
+    }
 
-			// Check if we reached the end or start of the text
-			if ((direction === 1 && i >= maxStart) || (direction === -1 && i <= 0)) {
-				holding = true; // Pause at the end
-				setTimeout(() => {
-					direction *= -1; // Reverse direction
-					holding = false; // Resume scrolling
-				}, holdTime);
-			} else {
-				i += direction; // Move to the next character
-			}
-		}
-	}
+    setScrollSpeed(new_speed: number) {
+        this.scroll_interval = new_speed;
+        this.i = 0;
+    }
 
-	// Start the ticker
-	function start() {
-		stop(); // Stop any existing ticker
-		if (fullText.length <= windowLength) {
-			// Text fits in the window, no scrolling needed
-			setter(fullText);
-			return;
-		}
-		interval = setInterval(tick, tickSpeed); // Start the interval timer
-	}
-
-	// Stop the ticker
-	function stop() {
-		if (interval) clearInterval(interval); // Clear the interval timer
-	}
-
-	// Return the start/stop controls for the ticker
-	return { start, stop };
+    async scroll() { // this is for one cycle. when it is finished, it should be called again from a loop to snap the scroller text to the beginning.
+        if (this.target_element?.innerText !== null) this.target_element.innerText = this.text.substring(0, this.max_length); // if you want the first segment of text to display immediately.
+        for (this.i = 1; this.i <= this.steps(); this.i++) { // set i to 1 if you want the first segment of text to display immediately.
+            await new Promise(resolve => {
+                setTimeout(() => {
+                    let scroller_text = this.text.substring(this.i * this.max_length - this.trail_chars, (this.i + 1) * this.max_length);
+                    if (this.target_element?.innerText !== null) this.target_element.innerText = scroller_text;
+                    resolve(null);
+                }, this.scroll_interval);
+            });
+        }
+        await this.scroll();
+    }
 }
