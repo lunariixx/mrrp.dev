@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { initSnow } from '$lib/scripts/snow';
-	import { createTicker } from '$lib/scripts/scroller';
+	import { Scroller } from '$lib/scripts/scroller';
+	import { AsyncAlarmClock } from '$lib/scripts/asyncalarmclock';
 	import { fetchNowPlaying } from '$lib/scripts/music';
 	import type { NowPlaying } from '$lib/scripts/music';
 	import { fetchOnline } from '$lib/scripts/lanyard';
@@ -15,10 +16,17 @@
 		playedAt: "0"
 	};
 
-	let displayedTitle = 'SONG_TITLE';
-	let displayedArtist = 'ARTIST_NAME';
-	let titleTicker: ReturnType<typeof createTicker> | undefined;
-	let artistTicker: ReturnType<typeof createTicker> | undefined;
+	// let displayedTitle = 'SONG_TITLE';
+	// let displayedArtist = 'ARTIST_NAME';
+
+	const titleScroller: Scroller = new Scroller("songname", song.title, 16, 1);
+	const titleClock: AsyncAlarmClock = new AsyncAlarmClock(300, () => titleScroller.scroll(titleClock.interval));
+	
+	const artistScroller: Scroller = new Scroller("artist", song.artist, 16, 1);
+	const artistClock: AsyncAlarmClock = new AsyncAlarmClock(300, () => artistScroller.scroll(artistClock.interval));
+
+	// let titleTicker: ReturnType<typeof createTicker> | undefined;
+	// let artistTicker: ReturnType<typeof createTicker> | undefined;
 
 	let online = false;
 
@@ -30,24 +38,26 @@
 		updateStatus();
 		const interval = setInterval(updateSong, 5000);
 		const interval2 = setInterval(updateStatus, 5000);
+		titleClock.setTimer();
+		artistClock.setTimer();
 		return () => {
 			clearInterval(interval);
-			titleTicker?.stop();
-			artistTicker?.stop();
+			titleClock.clearTimer?.(); // titleTicker?.stop();
+			artistClock.clearTimer?.(); // artistTicker?.stop();
 		};
 	});
 
 	async function updateSong() {
 		song = await fetchNowPlaying();
+		// titleClock.clearTimer?.(); // titleTicker?.stop();
+		// artistClock.clearTimer?.(); // artistTicker?.stop();
 
-		titleTicker?.stop();
-		artistTicker?.stop();
-
-		titleTicker = createTicker(song.title, (val) => (displayedTitle = val), 16);
-		artistTicker = createTicker(song.artist, (val) => (displayedArtist = val), 16);
-
-		titleTicker.start();
-		artistTicker.start();
+		if(song.title !== titleScroller.text) titleScroller.setIndex(0), titleScroller.setDirection("forward"), titleScroller.setText(song.title); // titleTicker = createTicker(song.title, (val) => (displayedTitle = val), 16);
+		if(song.artist !== artistScroller.text) artistScroller.setIndex(0), artistScroller.setDirection("forward"), artistScroller.setText(song.artist); // artistTicker = createTicker(song.artist, (val) => (displayedArtist = val), 16);
+		
+		// await new Promise(resolve=>setTimeout(resolve, ));
+		// await titleClock.setTimer();
+		// await artistClock.setTimer();
 	}
 
 	async function updateStatus() {
@@ -125,8 +135,8 @@
 									alt="Album cover for {song.title}"
 								/>
 								<div id="songtext">
-									<span id="songname">{displayedTitle}</span>
-									<span id="artist">{displayedArtist}</span>
+									<span id="songname">{song.title}</span>
+									<span id="artist">{song.artist}</span>
 								</div>
 							</div>
 						</a>
